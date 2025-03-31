@@ -1,0 +1,6 @@
+.DS_Store
+.terraform
+.terraform.lock.hcl
+.envrc
+.decrypted~secrets-enc.yaml
+.secrets.yaml
