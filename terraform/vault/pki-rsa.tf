@@ -17,9 +17,9 @@ resource "vault_mount" "rsa" {
 
 }
 
-data "sops_file" "vault_rsa_key" {  
+data "sops_file" "vault_rsa_key" {
   source_file = "${path.module}/cas/vault-rsa/key-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 resource "vault_pki_secret_backend_config_ca" "rsa_ca" {

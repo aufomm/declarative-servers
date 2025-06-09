@@ -17,6 +17,25 @@ data "vault_policy_document" "secrets_readonly" {
   }
 }
 
+resource "vault_policy" "insomnia_readonly" {
+  name   = "insomnia_readonly_policy"
+  policy = data.vault_policy_document.insomnia_readonly.hcl
+}
+
+data "vault_policy_document" "insomnia_readonly" {
+  rule {
+    path         = "${vault_mount.insomnia.path}/data/*"
+    capabilities = ["read"]
+    description  = "Allow reading secret contents at all paths under the mount insomnia"
+  }
+
+  rule {
+    path         = "${vault_mount.insomnia.path}/metadata/*"
+    capabilities = ["read", "list"]
+    description  = "Allow listing available secrets and viewing their metadata under the mount insomnia"
+  }
+}
+
 # Admin policy document for Vault
 data "vault_policy_document" "admin" {
   # Root level access

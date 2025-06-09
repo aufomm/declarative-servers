@@ -1,6 +1,6 @@
 data "sops_file" "kv-secrets" {
   source_file = "secrets-enc.yaml"
-  input_type = "yaml"
+  input_type  = "yaml"
 }
 
 resource "vault_mount" "secrets" {
@@ -67,14 +67,14 @@ data "sops_file" "leaf_cert" {
   for_each = toset(local.cert_types)
 
   source_file = "${path.module}/certs/${each.key}/cert-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 data "sops_file" "leaf_key" {
   for_each = toset(local.cert_types)
 
   source_file = "${path.module}/certs/${each.key}/key-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 resource "vault_kv_secret_v2" "certs" {
@@ -102,14 +102,14 @@ data "sops_file" "ca_cert" {
   for_each = toset(local.ca_types)
 
   source_file = "${path.module}/cas/${each.key}/cert-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 data "sops_file" "ca_key" {
   for_each = toset(local.ca_types)
 
   source_file = "${path.module}/cas/${each.key}/key-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 resource "vault_kv_secret_v2" "cas" {

@@ -17,9 +17,9 @@ resource "vault_mount" "ecc" {
 
 }
 
-data "sops_file" "vault_ecc_key" {  
+data "sops_file" "vault_ecc_key" {
   source_file = "${path.module}/cas/vault-ecc/key-enc.bin"
-  input_type = "raw"
+  input_type  = "raw"
 }
 
 resource "vault_pki_secret_backend_config_ca" "ecc_ca" {

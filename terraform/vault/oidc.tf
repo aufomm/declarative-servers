@@ -21,3 +21,24 @@ resource "vault_jwt_auth_backend_role" "admin" {
     "https://vault.li.lab:8200/ui/vault/auth/oidc/oidc/callback"
   ]
 }
+
+resource "vault_jwt_auth_backend" "hcv_jwt" {
+  path               = "jwt"
+  description        = "Use Keycloak specific client to authenticate with hashicorp vault via JWT"
+  type               = "jwt"
+  default_role       = "jwt_secret_readonly"
+  oidc_discovery_url = "https://auth.li.lab/realms/terraform"
+  bound_issuer       = "https://auth.li.lab/realms/terraform"
+}
+
+resource "vault_jwt_auth_backend_role" "hcv_jwt_secret_readonly" {
+  backend         = vault_jwt_auth_backend.hcv_jwt.path
+  role_name       = "jwt_secret_readonly"
+  token_policies  = ["secrets_readonly_policy"]
+  user_claim      = "azp"
+  bound_audiences = ["account"]
+  bound_claims = {
+    "azp" = data.sops_file.kv-secrets.data["hcv_jwt.client_id"]
+  }
+  role_type = "jwt"
+}
