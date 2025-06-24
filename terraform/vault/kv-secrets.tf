@@ -46,18 +46,6 @@ resource "vault_kv_secret_v2" "gemini_api_key" {
   )
 }
 
-resource "vault_kv_secret_v2" "auspost" {
-  mount               = vault_mount.secrets.path
-  name                = "kong/auspost"
-  cas                 = 1
-  delete_all_versions = true
-  data_json = jsonencode(
-    {
-      jwk = data.sops_file.kv-secrets.data["kong.auspost_jwk"],
-    }
-  )
-}
-
 locals {
   cert_types = ["lan", "k8s", "hybrid", "lab", "cluster"]
 }

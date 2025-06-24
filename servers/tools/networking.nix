@@ -11,6 +11,10 @@
         "vault.li.lab"
         "redis.li.lab"
       ];
+      "192.168.3.162" = [
+        "traefik.li.rock"
+        "kong.li.rock"
+      ];
     };
   };
 }
