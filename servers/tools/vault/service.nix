@@ -13,7 +13,7 @@ in
     storagePath = "/var/lib/vault";
     extraConfig = ''
       api_addr     = "https://${hostname}:8200"
-      disable_clustering = true;
+      disable_clustering = true
       ui           = true
     '';
     tlsCertFile = "${sslCert}";
