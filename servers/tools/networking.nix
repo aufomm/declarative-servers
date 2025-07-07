@@ -13,7 +13,7 @@
       ];
       "192.168.3.162" = [
         "traefik.li.rock"
-        "kong.li.rock"
+        "proxy.li.rock"
       ];
     };
   };
