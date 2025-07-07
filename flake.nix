@@ -32,6 +32,7 @@
     let
       forEachSystem =
         f: nixpkgs.lib.genAttrs (import systems) (system: f system nixpkgs.legacyPackages.${system});
+        
       mkColmenaConfig =
         {
           user ? "fomm",
@@ -60,12 +61,9 @@
         };
     in
     {
-      colmenaHive = colmena.lib.makeHive self.outputs.colmena;
-      colmena = {
+      colmenaHive = colmena.lib.makeHive {
         meta = {
-          nixpkgs = import nixpkgs {
-            system = "x86_64-linux";
-          };
+          nixpkgs = nixpkgs.legacyPackages.x86_64-linux;
         };
 
         defaults =
@@ -103,7 +101,7 @@
                 echo "Applying to server: $serverName"
                 exec ${
                   colmena.packages.${system}.colmena
-                }/bin/colmena apply --experimental-flake-eval --on "$serverName"
+                }/bin/colmena apply --on "$serverName"
               ''
             );
           };
