@@ -1,3 +1,11 @@
+locals {
+  domains = {
+    "vault"   = "vault.li.lab:8200"
+    "grafana" = "grafana.li.k0s"
+    "argocd"  = "argo.li.k0s"
+    "mesh"    = "mesh.li.k0s"
+  }
+}
 resource "keycloak_openid_client" "assertion" {
   realm_id                  = keycloak_realm.terraform.id
   client_id                 = "assertion"
@@ -22,10 +30,10 @@ resource "keycloak_openid_client" "vault" {
   enabled     = true
   access_type = "CONFIDENTIAL"
   valid_redirect_uris = [
-    "https://vault.li.lab:8200/ui/vault/auth/oidc/oidc/callback"
+    "https://${local.domains.vault}/ui/vault/auth/oidc/oidc/callback"
   ]
   web_origins = [
-    "https://vault.li.lab:8200"
+    "https://${local.domains.vault}"
   ]
   service_accounts_enabled  = true
   client_secret             = data.sops_file.secrets.data["vault.client_secret"]
@@ -65,4 +73,77 @@ resource "keycloak_openid_client" "hcv-jwt" {
   client_secret                = data.sops_file.secrets.data["hcv_jwt.client_secret"]
   standard_flow_enabled        = false
   client_authenticator_type    = "client-secret"
+}
+
+resource "keycloak_openid_client" "grafana" {
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "grafana"
+  name        = "lab-grafana-login"
+  description = "A client for homelab grafana OIDC log in"
+  enabled     = true
+  access_type = "CONFIDENTIAL"
+  valid_redirect_uris = [
+    "https://${local.domains.grafana}/login/generic_oauth"
+  ]
+  web_origins = [
+    "https://${local.domains.grafana}"
+  ]
+  root_url                     = "https://${local.domains.grafana}"
+  admin_url                    = "https://${local.domains.grafana}"
+  base_url                     = "https://${local.domains.grafana}"
+  service_accounts_enabled     = true
+  client_secret                = data.sops_file.secrets.data["grafana.client_secret"]
+  standard_flow_enabled        = true
+  implicit_flow_enabled        = false
+  direct_access_grants_enabled = true
+}
+
+resource "keycloak_openid_client" "argocd" {
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "argocd"
+  name        = "lab-argocd-login"
+  description = "A client for homelab argocd OIDC log in"
+  enabled     = true
+  access_type = "CONFIDENTIAL"
+  valid_redirect_uris = [
+    "https://${local.domains.argocd}/auth/callback",
+    "https://${local.domains.argocd}/pkce/verify",
+    "https://${local.domains.argocd}"
+  ]
+  web_origins = [
+    "https://${local.domains.argocd}"
+  ]
+  valid_post_logout_redirect_uris = [
+    "https://${local.domains.argocd}/applications"
+  ]
+  root_url                     = "https://${local.domains.argocd}"
+  admin_url                    = "https://${local.domains.argocd}"
+  base_url                     = "/applications"
+  service_accounts_enabled     = true
+  client_secret                = data.sops_file.secrets.data["argocd.client_secret"]
+  standard_flow_enabled        = true
+  implicit_flow_enabled        = false
+  direct_access_grants_enabled = true
+  # pkce_code_challenge_method = "S256"
+}
+
+resource "keycloak_openid_client" "mesh-cp" {
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "mesh-cp"
+  name        = "lab-mesh-cp-login"
+  description = "A client for homelab mesh cp OIDC log in via kong"
+  enabled     = true
+  access_type = "CONFIDENTIAL"
+  valid_redirect_uris = [
+    "https://${local.domains.mesh}",
+    "https://${local.domains.mesh}/",
+    "https://${local.domains.mesh}/*"
+  ]
+  web_origins = [
+    "https://${local.domains.mesh}"
+  ]
+  service_accounts_enabled = true
+  client_secret            = data.sops_file.secrets.data["mesh.client_secret"]
+  standard_flow_enabled    = true
+  implicit_flow_enabled    = false
 }
