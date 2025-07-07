@@ -22,6 +22,19 @@ resource "vault_kv_secret_v2" "redis" {
   )
 }
 
+resource "vault_kv_secret_v2" "kong_oidc_mesh" {
+  mount               = vault_mount.secrets.path
+  name                = "kong/oidc/mesh"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      session_secret = data.sops_file.kv-secrets.data["kong.oidc.session_secret"]
+      client_secret  = data.sops_file.kv-secrets.data["kong.oidc.mesh.client_secret"]
+    }
+  )
+}
+
 resource "vault_kv_secret_v2" "mistral_auth_header" {
   mount               = vault_mount.secrets.path
   name                = "ai/mistral"
@@ -42,6 +55,44 @@ resource "vault_kv_secret_v2" "gemini_api_key" {
   data_json = jsonencode(
     {
       api_key = data.sops_file.kv-secrets.data["ai.gemini_api_key"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "homelab_jwks" {
+  mount               = vault_mount.secrets.path
+  name                = "homelab/jwks"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      private = data.sops_file.kv-secrets.data["nginx_jwk.private"]
+      public  = data.sops_file.kv-secrets.data["nginx_jwk.public"]
+      idp     = data.sops_file.kv-secrets.data["nginx_jwk.idp"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "grafana_client_secret" {
+  mount               = vault_mount.secrets.path
+  name                = "homelab/grafana_client_secret"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["oidc.grafana.client_secret"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "grafana_client_id" {
+  mount               = vault_mount.secrets.path
+  name                = "homelab/grafana_client_id"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["oidc.grafana.client_id"]
     }
   )
 }

@@ -3,8 +3,8 @@ resource "vault_jwt_auth_backend" "oidc" {
   type               = "oidc"
   default_role       = "admin"
   oidc_discovery_url = "https://auth.li.lab/realms/terraform"
-  oidc_client_id     = data.sops_file.kv-secrets.data["oidc.client_id"]
-  oidc_client_secret = data.sops_file.kv-secrets.data["oidc.client_secret"]
+  oidc_client_id     = data.sops_file.kv-secrets.data["oidc.vault.client_id"]
+  oidc_client_secret = data.sops_file.kv-secrets.data["oidc.vault.client_secret"]
   namespace_in_state = true
 }
 
