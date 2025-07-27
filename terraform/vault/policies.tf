@@ -36,6 +36,55 @@ data "vault_policy_document" "insomnia_readonly" {
   }
 }
 
+resource "vault_policy" "konnect_readonly" {
+  name   = "konnect_readonly"
+  policy = data.vault_policy_document.konnect_readonly.hcl
+}
+
+data "vault_policy_document" "konnect_readonly" {
+  rule {
+    path         = "${vault_mount.konnect.path}/data/*"
+    capabilities = ["read"]
+    description  = "Allow reading secret contents at all paths under the mount konnect"
+  }
+
+  rule {
+    path         = "${vault_mount.konnect.path}/metadata/*"
+    capabilities = ["read", "list"]
+    description  = "Allow listing available secrets and viewing their metadata under the mount konnect"
+  }
+
+  rule {
+    path         = "auth/token/create"
+    capabilities = ["update"]
+    description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+  }
+}
+
+resource "vault_policy" "konnect_admin" {
+  name   = "konnect_admin"
+  policy = data.vault_policy_document.konnect_admin.hcl
+}
+
+data "vault_policy_document" "konnect_admin" {
+  rule {
+    path         = "${vault_mount.konnect.path}/data/*"
+    capabilities = ["create", "update", "read", "delete"]
+    description  = "Allow admin secret contents at all paths under the mount konnect"
+  }
+
+  rule {
+    path         = "${vault_mount.konnect.path}/metadata/*"
+    capabilities = ["create", "update", "read", "delete", "list"]
+    description  = "Allow listing available secrets and viewing their metadata under the mount konnect"
+  }
+  rule {
+    path         = "auth/token/create"
+    capabilities = ["update"]
+    description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+  }
+}
+
 # Admin policy document for Vault
 data "vault_policy_document" "admin" {
   # Root level access

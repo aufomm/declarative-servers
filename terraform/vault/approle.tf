@@ -40,3 +40,29 @@ resource "vault_approle_auth_backend_role_secret_id" "rock_readonly" {
   role_name = vault_approle_auth_backend_role.rock_readonly.role_name
   secret_id = data.sops_file.kv-secrets.data["approle.rock.secret_id"]
 }
+
+resource "vault_approle_auth_backend_role" "konnect_readonly" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = "konnect_readonly_role"
+  role_id        = data.sops_file.kv-secrets.data["approle.konnect_readonly.role_id"]
+  token_policies = ["konnect_readonly"]
+}
+
+resource "vault_approle_auth_backend_role_secret_id" "konnect_readonly" {
+  backend   = vault_auth_backend.approle.path
+  role_name = vault_approle_auth_backend_role.konnect_readonly.role_name
+  secret_id = data.sops_file.kv-secrets.data["approle.konnect_readonly.secret_id"]
+}
+
+resource "vault_approle_auth_backend_role" "konnect_admin" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = "konnect_admin_role"
+  role_id        = data.sops_file.kv-secrets.data["approle.konnect_admin.role_id"]
+  token_policies = ["konnect_admin"]
+}
+
+resource "vault_approle_auth_backend_role_secret_id" "konnect_admin" {
+  backend   = vault_auth_backend.approle.path
+  role_name = vault_approle_auth_backend_role.konnect_admin.role_name
+  secret_id = data.sops_file.kv-secrets.data["approle.konnect_admin.secret_id"]
+}
