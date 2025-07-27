@@ -4,6 +4,7 @@ locals {
     "grafana" = "grafana.li.k0s"
     "argocd"  = "argo.li.k0s"
     "mesh"    = "mesh.li.k0s"
+    "orders"  = "orders.li.k0s"
   }
 }
 resource "keycloak_openid_client" "assertion" {
@@ -144,6 +145,27 @@ resource "keycloak_openid_client" "mesh-cp" {
   ]
   service_accounts_enabled = true
   client_secret            = data.sops_file.secrets.data["mesh.client_secret"]
+  standard_flow_enabled    = true
+  implicit_flow_enabled    = false
+}
+
+resource "keycloak_openid_client" "orders-frontend" {
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "orders"
+  name        = "lab-orders-frontend-login"
+  description = "A client for homelab orders tracking OIDC log in via kong"
+  enabled     = true
+  access_type = "CONFIDENTIAL"
+  valid_redirect_uris = [
+    "https://${local.domains.orders}",
+    "https://${local.domains.orders}/",
+    "https://${local.domains.orders}/*"
+  ]
+  web_origins = [
+    "https://${local.domains.orders}"
+  ]
+  service_accounts_enabled = true
+  client_secret            = data.sops_file.secrets.data["orders.client_secret"]
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
 }

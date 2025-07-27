@@ -29,8 +29,21 @@ resource "vault_kv_secret_v2" "kong_oidc_mesh" {
   delete_all_versions = true
   data_json = jsonencode(
     {
-      session_secret = data.sops_file.kv-secrets.data["kong.oidc.session_secret"]
+      session_secret = data.sops_file.kv-secrets.data["kong.oidc.mesh.session_secret"]
       client_secret  = data.sops_file.kv-secrets.data["kong.oidc.mesh.client_secret"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "kong_oidc_orders" {
+  mount               = vault_mount.secrets.path
+  name                = "kong/oidc/orders"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      session_secret = data.sops_file.kv-secrets.data["kong.oidc.orders.session_secret"]
+      client_secret  = data.sops_file.kv-secrets.data["kong.oidc.orders.client_secret"]
     }
   )
 }
