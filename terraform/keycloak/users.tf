@@ -54,49 +54,6 @@ resource "keycloak_user" "grafana-admin" {
   }
 }
 
-resource "keycloak_role" "grafanaadmin" {
-  realm_id  = keycloak_realm.terraform.id
-  client_id = keycloak_openid_client.grafana.id
-  name      = "grafanaadmin"
-}
-
-
-data "keycloak_role" "offline_access" {
-  realm_id = keycloak_realm.terraform.id
-  name     = "offline_access"
-}
-
-resource "keycloak_user_roles" "add_grafana_admin_roles" {
-  realm_id = keycloak_realm.terraform.id
-  user_id  = keycloak_user.grafana-admin.id
-
-  role_ids = [
-    keycloak_role.grafanaadmin.id,
-    data.keycloak_role.offline_access.id
-  ]
-}
-
-resource "keycloak_user_roles" "add_fomm_roles" {
-  realm_id = keycloak_realm.terraform.id
-  user_id  = keycloak_user.fomm.id
-
-  role_ids = [
-    keycloak_role.grafanaadmin.id,
-    data.keycloak_role.offline_access.id,
-  ]
-}
-
-resource "keycloak_openid_user_client_role_protocol_mapper" "add_role_claim" {
-  realm_id            = keycloak_realm.terraform.id
-  client_id           = keycloak_openid_client.grafana.id
-  name                = "client roles"
-  claim_name          = "roles"
-  add_to_id_token     = true
-  add_to_access_token = true
-  add_to_userinfo     = true
-  multivalued         = true
-}
-
 resource "keycloak_user" "argocd-admin" {
   realm_id       = keycloak_realm.terraform.id
   username       = "argocd-admin"

@@ -92,7 +92,7 @@ resource "keycloak_openid_client" "grafana" {
   root_url                     = "https://${local.domains.grafana}"
   admin_url                    = "https://${local.domains.grafana}"
   base_url                     = "https://${local.domains.grafana}"
-  service_accounts_enabled     = true
+  service_accounts_enabled     = false
   client_secret                = data.sops_file.secrets.data["grafana.client_secret"]
   standard_flow_enabled        = true
   implicit_flow_enabled        = false
