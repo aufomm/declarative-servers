@@ -2,7 +2,7 @@
   imports = [
     ./service.nix
     ./sops.nix
-    ./traefik.nix
+    # ./traefik.nix
   ];
 
   users.users.keycloak = {

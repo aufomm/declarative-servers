@@ -4,3 +4,5 @@
 .envrc
 .decrypted~secrets-enc.yaml
 .secrets.yaml
+terraform/keycloak/cert.pem
+terraform/keycloak/key.pem

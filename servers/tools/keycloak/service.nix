@@ -2,6 +2,9 @@
 let
   hostname = "auth.li.lab";
   dbPassword = config.sops.secrets."keycloak/db-password".path;
+  sslCert = config.sops.secrets."keycloak/ssl_certificate".path;
+  sslCertKey = config.sops.secrets."keycloak/ssl_certificate_key".path;
+  homeCA = config.sops.secrets."fomm_ca".path;
 in
 {
   services.keycloak = {
@@ -12,10 +15,12 @@ in
     initialAdminPassword = "veryconfusing";
     settings = {
       inherit hostname;
-      http-enabled = true;
-      http-host = "127.0.0.1";
-      http-port = 8080;
-      proxy-headers = "xforwarded";
+      https-port = 9443;
+      https-certificate-file = "${sslCert}";
+      https-certificate-key-file = "${sslCertKey}";
+      https-trust-store-file = "${homeCA}";
+      https-trust-store-type = "PEM";
+      https-client-auth = "request";
     };
   };
 
@@ -28,4 +33,8 @@ in
       RestartSec = 5;
     };
   };
+
+  networking.firewall.allowedTCPPorts = [
+    9443
+  ];
 }

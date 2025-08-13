@@ -169,3 +169,18 @@ resource "keycloak_openid_client" "orders-frontend" {
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
 }
+
+resource "keycloak_openid_client" "mtls" {
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "mtls"
+  name        = "lab-mtls-cbat"
+  description = "A client for testing client auth with keycloak"
+  enabled     = true
+  access_type = "CONFIDENTIAL"
+  service_accounts_enabled = true
+  client_authenticator_type = "client-x509"
+  extra_config = {
+    "x509.subjectdn" = "CN=fomm-kc-mtls"
+    "tls.client.certificate.bound.access.tokens" = "true"
+  }
+}
