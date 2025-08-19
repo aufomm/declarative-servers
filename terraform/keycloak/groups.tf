@@ -51,9 +51,11 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups_scope_mapper
   realm_id       = keycloak_realm.terraform.id
   client_scope_id = keycloak_openid_client_scope.groups_scope.id
   name      = "groups-mapper"
-
   claim_name = "groups"
   full_path  = false
+  add_to_id_token     = true
+  add_to_access_token = false
+  add_to_userinfo     = false
 }
 
 resource "keycloak_openid_client_optional_scopes" "argocd_groups_optional_scope" {
