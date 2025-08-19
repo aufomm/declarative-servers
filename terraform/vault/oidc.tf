@@ -2,10 +2,13 @@ resource "vault_jwt_auth_backend" "oidc" {
   path               = "oidc"
   type               = "oidc"
   default_role       = "admin"
-  oidc_discovery_url = "https://auth.li.lab/realms/terraform"
+  oidc_discovery_url = "https://auth.li.lab:9443/realms/terraform"
   oidc_client_id     = data.sops_file.kv-secrets.data["oidc.vault.client_id"]
   oidc_client_secret = data.sops_file.kv-secrets.data["oidc.vault.client_secret"]
   namespace_in_state = true
+  tune {
+    listing_visibility = "unauth"
+  }
 }
 
 resource "vault_jwt_auth_backend_role" "admin" {
@@ -27,8 +30,8 @@ resource "vault_jwt_auth_backend" "hcv_jwt" {
   description        = "Use Keycloak specific client to authenticate with hashicorp vault via JWT"
   type               = "jwt"
   default_role       = "jwt_secret_readonly"
-  oidc_discovery_url = "https://auth.li.lab/realms/terraform"
-  bound_issuer       = "https://auth.li.lab/realms/terraform"
+  oidc_discovery_url = "https://auth.li.lab:9443/realms/terraform"
+  bound_issuer       = "https://auth.li.lab:9443/realms/terraform"
 }
 
 resource "vault_jwt_auth_backend_role" "hcv_jwt_secret_readonly" {
