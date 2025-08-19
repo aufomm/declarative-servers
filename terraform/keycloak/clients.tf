@@ -7,6 +7,7 @@ locals {
     "orders"  = "orders.li.k0s"
   }
 }
+
 resource "keycloak_openid_client" "assertion" {
   realm_id                  = keycloak_realm.terraform.id
   client_id                 = "assertion"
@@ -36,7 +37,7 @@ resource "keycloak_openid_client" "vault" {
   web_origins = [
     "https://${local.domains.vault}"
   ]
-  service_accounts_enabled  = true
+  service_accounts_enabled  = false
   client_secret             = data.sops_file.secrets.data["vault.client_secret"]
   standard_flow_enabled     = true
   client_authenticator_type = "client-secret"
@@ -89,9 +90,6 @@ resource "keycloak_openid_client" "grafana" {
   web_origins = [
     "https://${local.domains.grafana}"
   ]
-  root_url                     = "https://${local.domains.grafana}"
-  admin_url                    = "https://${local.domains.grafana}"
-  base_url                     = "https://${local.domains.grafana}"
   service_accounts_enabled     = false
   client_secret                = data.sops_file.secrets.data["grafana.client_secret"]
   standard_flow_enabled        = true
@@ -108,8 +106,6 @@ resource "keycloak_openid_client" "argocd" {
   access_type = "CONFIDENTIAL"
   valid_redirect_uris = [
     "https://${local.domains.argocd}/auth/callback",
-    "https://${local.domains.argocd}/pkce/verify",
-    "https://${local.domains.argocd}"
   ]
   web_origins = [
     "https://${local.domains.argocd}"
@@ -117,15 +113,11 @@ resource "keycloak_openid_client" "argocd" {
   valid_post_logout_redirect_uris = [
     "https://${local.domains.argocd}/applications"
   ]
-  root_url                     = "https://${local.domains.argocd}"
-  admin_url                    = "https://${local.domains.argocd}"
-  base_url                     = "/applications"
-  service_accounts_enabled     = true
+  service_accounts_enabled     = false
   client_secret                = data.sops_file.secrets.data["argocd.client_secret"]
   standard_flow_enabled        = true
   implicit_flow_enabled        = false
   direct_access_grants_enabled = true
-  # pkce_code_challenge_method = "S256"
 }
 
 resource "keycloak_openid_client" "mesh-cp" {
@@ -143,7 +135,7 @@ resource "keycloak_openid_client" "mesh-cp" {
   web_origins = [
     "https://${local.domains.mesh}"
   ]
-  service_accounts_enabled = true
+  service_accounts_enabled = false
   client_secret            = data.sops_file.secrets.data["mesh.client_secret"]
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
@@ -157,14 +149,12 @@ resource "keycloak_openid_client" "orders-frontend" {
   enabled     = true
   access_type = "CONFIDENTIAL"
   valid_redirect_uris = [
-    "https://${local.domains.orders}",
     "https://${local.domains.orders}/",
-    "https://${local.domains.orders}/*"
   ]
   web_origins = [
     "https://${local.domains.orders}"
   ]
-  service_accounts_enabled = true
+  service_accounts_enabled = false
   client_secret            = data.sops_file.secrets.data["orders.client_secret"]
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
