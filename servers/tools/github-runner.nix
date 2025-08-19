@@ -1,11 +1,20 @@
 {
   config,
+  pkgs,
+  lib,
   ...
 }:
 let
   ghRunnerToken = config.sops.secrets."github-runner-token".path;
 in
 {
+  environment.systemPackages = map lib.lowPrio [
+    pkgs.nodejs_20
+    pkgs.wget
+    pkgs.unzip
+    pkgs.terraform
+  ];
+
   services = {
     github-runners = {
       nixos = {
