@@ -14,7 +14,6 @@ resource "vault_mount" "rsa" {
   passthrough_request_headers = [
     "If-Modified-Since"
   ]
-
 }
 
 data "sops_file" "vault_rsa_key" {
@@ -27,22 +26,40 @@ resource "vault_pki_secret_backend_config_ca" "rsa_ca" {
   pem_bundle = data.sops_file.vault_rsa_key.raw
 }
 
-resource "vault_pki_secret_backend_role" "rsa_certmanager_role" {
+resource "vault_pki_secret_backend_role" "rsa_certmanager" {
   backend                     = vault_mount.rsa.path
   name                        = "certmanager"
-  ttl                         = 31622400
+  ttl                         = 31622400 # 366 days
   not_before_duration         = "1m"
-  allow_ip_sans               = true
-  allow_subdomains            = true
-  allow_localhost             = true
-  allow_bare_domains          = true
   allow_any_name              = true
-  allow_wildcard_certificates = true
-  allow_glob_domains          = true
+  enforce_hostnames           = true
+  allow_wildcard_certificates = false
   server_flag                 = true
-  client_flag                 = true
+  client_flag                 = false
   key_usage                   = ["DigitalSignature", "KeyAgreement", "KeyEncipherment"]
-  ext_key_usage               = ["ClientAuth", "ServerAuth"]
+  ext_key_usage               = ["ServerAuth"]
+  key_type                    = "rsa"
+  key_bits                    = 2048
+  use_csr_common_name         = true
+  use_csr_sans                = true
+  organization                = ["foMM Ltd"]
+  country                     = ["Australia"]
+  locality                    = ["Melbourne"]
+  province                    = ["Victoria"]
+}
+
+resource "vault_pki_secret_backend_role" "rsa_client_cert" {
+  backend                     = vault_mount.rsa.path
+  name                        = "client-cert"
+  ttl                         = 7884000 # 90 days
+  not_before_duration         = "1m"
+  enforce_hostnames           = false
+  allow_any_name              = true
+  allow_wildcard_certificates = false
+  server_flag                 = false
+  client_flag                 = true
+  key_usage                   = ["DigitalSignature"]
+  ext_key_usage               = ["ClientAuth"]
   key_type                    = "rsa"
   key_bits                    = 2048
   use_csr_common_name         = true
