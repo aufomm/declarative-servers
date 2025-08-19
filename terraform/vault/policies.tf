@@ -72,7 +72,6 @@ data "vault_policy_document" "konnect_admin" {
     capabilities = ["create", "update", "read", "delete"]
     description  = "Allow admin secret contents at all paths under the mount konnect"
   }
-
   rule {
     path         = "${vault_mount.konnect.path}/metadata/*"
     capabilities = ["create", "update", "read", "delete", "list"]
@@ -82,6 +81,17 @@ data "vault_policy_document" "konnect_admin" {
     path         = "auth/token/create"
     capabilities = ["update"]
     description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+  }
+
+  rule {
+    path         = "${vault_mount.rsa.path}/issue/${vault_pki_secret_backend_role.rsa_client_cert.name}"
+    capabilities = ["create", "update"]
+    description  = "Allow issuing certificates using the client-cert role"
+  }
+  rule {
+    path         = "sys/mounts/${vault_mount.rsa.path}"
+    capabilities = ["read"]
+    description  = "Allow reading mount metadata for rsa"
   }
 }
 
