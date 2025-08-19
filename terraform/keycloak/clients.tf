@@ -180,7 +180,9 @@ resource "keycloak_openid_client" "mtls" {
   service_accounts_enabled = true
   client_authenticator_type = "client-x509"
   extra_config = {
-    "x509.subjectdn" = "CN=fomm-kc-mtls"
+    # "x509.subjectdn" = ".*CN=fomm-kc-mtls.*"
+    "x509.subjectdn" = "CN=fomm-kc-mtls, O=foMM Ltd, L=Melbourne, ST=Victoria, C=AU"
+    # openssl x509 -subject -noout -in cert.pem -nameopt rfc2253,sep_comma_plus_space
     "tls.client.certificate.bound.access.tokens" = "true"
   }
 }
