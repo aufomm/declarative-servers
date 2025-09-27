@@ -34,6 +34,18 @@ resource "vault_kv_secret_v2" "pg_ai" {
   )
 }
 
+resource "vault_kv_secret_v2" "home_ca" {
+  mount               = vault_mount.secrets.path
+  name                = "home-ca"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["home_ca"]
+    }
+  )
+}
+
 resource "vault_kv_secret_v2" "kong_oidc_mesh" {
   mount               = vault_mount.secrets.path
   name                = "kong/oidc/mesh"
