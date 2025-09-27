@@ -5,7 +5,7 @@
     ./postgres.nix
     ./redis.nix
     ./keycloak
-    ./minio
+    # ./minio
     ./vault
     ./github-runner.nix
   ];
