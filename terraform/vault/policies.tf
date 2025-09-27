@@ -1,63 +1,66 @@
-resource "vault_policy" "secrets_readonly" {
-  name   = "secrets_readonly_policy"
-  policy = data.vault_policy_document.secrets_readonly.hcl
-}
-
-data "vault_policy_document" "secrets_readonly" {
-  rule {
-    path         = "${vault_mount.secrets.path}/data/*"
-    capabilities = ["read"]
-    description  = "Allow reading secret contents at all paths under this mount"
-  }
-
-  rule {
-    path         = "${vault_mount.secrets.path}/metadata/*"
-    capabilities = ["read", "list"]
-    description  = "Allow listing available secrets and viewing their metadata"
-  }
-}
-
-resource "vault_policy" "insomnia_readonly" {
-  name   = "insomnia_readonly_policy"
-  policy = data.vault_policy_document.insomnia_readonly.hcl
-}
-
-data "vault_policy_document" "insomnia_readonly" {
-  rule {
-    path         = "${vault_mount.insomnia.path}/data/*"
-    capabilities = ["read"]
-    description  = "Allow reading secret contents at all paths under the mount insomnia"
-  }
-
-  rule {
-    path         = "${vault_mount.insomnia.path}/metadata/*"
-    capabilities = ["read", "list"]
-    description  = "Allow listing available secrets and viewing their metadata under the mount insomnia"
+locals {
+  readonly_policies = {
+    secrets = {
+      mount            = vault_mount.secrets.path
+      additional_rules = []
+      policy_name      = "secrets_readonly_policy"
+    }
+    insomnia = {
+      mount            = vault_mount.insomnia.path
+      additional_rules = []
+      policy_name      = "insomnia_readonly_policy"
+    }
+    konnect = {
+      mount = vault_mount.konnect.path
+      additional_rules = [
+        {
+          path         = "auth/token/create"
+          capabilities = ["update"]
+          description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+        }
+      ]
+      policy_name = "konnect_readonly"
+    }
   }
 }
 
-resource "vault_policy" "konnect_readonly" {
-  name   = "konnect_readonly"
-  policy = data.vault_policy_document.konnect_readonly.hcl
+resource "vault_policy" "readonly" {
+  for_each = local.readonly_policies
+
+  name   = each.value.policy_name
+  policy = data.vault_policy_document.readonly[each.key].hcl
 }
 
-data "vault_policy_document" "konnect_readonly" {
-  rule {
-    path         = "${vault_mount.konnect.path}/data/*"
-    capabilities = ["read"]
-    description  = "Allow reading secret contents at all paths under the mount konnect"
+data "vault_policy_document" "readonly" {
+  for_each = local.readonly_policies
+
+  dynamic "rule" {
+    for_each = [
+      {
+        path         = "${each.value.mount}/data/*"
+        capabilities = ["read"]
+        description  = "Allow reading secret contents at all paths under the mount ${each.key}"
+      },
+      {
+        path         = "${each.value.mount}/metadata/*"
+        capabilities = ["read", "list"]
+        description  = "Allow listing available secrets and viewing their metadata under the mount ${each.key}"
+      }
+    ]
+    content {
+      path         = rule.value.path
+      capabilities = rule.value.capabilities
+      description  = rule.value.description
+    }
   }
 
-  rule {
-    path         = "${vault_mount.konnect.path}/metadata/*"
-    capabilities = ["read", "list"]
-    description  = "Allow listing available secrets and viewing their metadata under the mount konnect"
-  }
-
-  rule {
-    path         = "auth/token/create"
-    capabilities = ["update"]
-    description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+  dynamic "rule" {
+    for_each = each.value.additional_rules
+    content {
+      path         = rule.value.path
+      capabilities = rule.value.capabilities
+      description  = rule.value.description
+    }
   }
 }
 
@@ -199,4 +202,18 @@ data "vault_policy_document" "admin" {
 resource "vault_policy" "admin" {
   name   = "admin"
   policy = data.vault_policy_document.admin.hcl
+}
+
+# Allow Konnect Admins to manage policies dynamically
+resource "vault_policy" "konnect_policy_admin" {
+  name   = "konnect_policy_admin"
+  policy = data.vault_policy_document.konnect_policy_admin.hcl
+}
+
+data "vault_policy_document" "konnect_policy_admin" {
+  rule {
+    path         = "sys/policies/acl/*"
+    capabilities = ["create", "update", "read", "delete", "list"]
+    description  = "Allow managing Vault policies"
+  }
 }
