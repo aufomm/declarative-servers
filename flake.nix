@@ -32,7 +32,7 @@
     let
       forEachSystem =
         f: nixpkgs.lib.genAttrs (import systems) (system: f system nixpkgs.legacyPackages.${system});
-        
+
       mkColmenaConfig =
         {
           user ? "fomm",
@@ -56,7 +56,8 @@
             home-manager.nixosModules.home-manager
             ./servers/configuration.nix
             hostModule
-          ] ++ extraModules;
+          ]
+          ++ extraModules;
           time.timeZone = "Australia/Melbourne";
         };
     in
@@ -75,7 +76,7 @@
           };
         tools = mkColmenaConfig {
           host = "tools";
-          buildOnTarget = true;
+          buildOnTarget = false;
           hostModule = ./servers/tools;
           extraModules = [
             sops-nix.nixosModules.sops
@@ -99,9 +100,7 @@
 
                 serverName="$1"
                 echo "Applying to server: $serverName"
-                exec ${
-                  colmena.packages.${system}.colmena
-                }/bin/colmena apply --on "$serverName"
+                exec ${colmena.packages.${system}.colmena}/bin/colmena apply --on "$serverName"
               ''
             );
           };
