@@ -202,3 +202,40 @@ resource "vault_kv_secret_v2" "cas" {
     key         = data.sops_file.ca_key[each.key].raw
   })
 }
+
+## JWT Auth with hcv for Keycloak integration
+resource "vault_kv_secret_v2" "jwt_client_secret" {
+  mount               = vault_mount.secrets.path
+  name                = "jwt_client_secret"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["keycloak_jwt_auth.client_secret"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "app1_header" {
+  mount               = vault_mount.secrets.path
+  name                = "app1_header"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["keycloak_jwt_auth.headers.app_1"]
+    }
+  )
+}
+
+resource "vault_kv_secret_v2" "app2_header" {
+  mount               = vault_mount.secrets.path
+  name                = "app2_header"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      data = data.sops_file.kv-secrets.data["keycloak_jwt_auth.headers.app_2"]
+    }
+  )
+}
