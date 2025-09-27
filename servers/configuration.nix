@@ -50,6 +50,9 @@
   environment.systemPackages = map lib.lowPrio [
     pkgs.curl
     pkgs.gitMinimal
+    pkgs.yq
+    pkgs.jq
+    (pkgs.callPackage ./tools/deck {})
   ];
 
   users.users.fomm = {
