@@ -7,7 +7,14 @@ resource "vault_jwt_auth_backend" "oidc" {
   oidc_client_secret = data.sops_file.kv-secrets.data["oidc.vault.client_secret"]
   namespace_in_state = true
   tune {
-    listing_visibility = "unauth"
+    allowed_response_headers     = []
+    audit_non_hmac_request_keys  = []
+    audit_non_hmac_response_keys = []
+    default_lease_ttl            = "768h"
+    listing_visibility           = "unauth"
+    max_lease_ttl                = "768h"
+    passthrough_request_headers  = []
+    token_type                   = "default-service"
   }
 }
 
