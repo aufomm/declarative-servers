@@ -10,6 +10,7 @@
         "minio.li.lab"
         "vault.li.lab"
         "redis.li.lab"
+        "pg.li.lab"
       ];
       "192.168.3.162" = [
         "traefik.li.rock"
