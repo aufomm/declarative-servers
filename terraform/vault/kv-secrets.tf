@@ -22,6 +22,18 @@ resource "vault_kv_secret_v2" "redis" {
   )
 }
 
+resource "vault_kv_secret_v2" "pg_ai" {
+  mount               = vault_mount.secrets.path
+  name                = "postgresql/ai"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      password = data.sops_file.kv-secrets.data["pg_ai.password"]
+    }
+  )
+}
+
 resource "vault_kv_secret_v2" "kong_oidc_mesh" {
   mount               = vault_mount.secrets.path
   name                = "kong/oidc/mesh"
