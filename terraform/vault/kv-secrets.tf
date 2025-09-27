@@ -170,7 +170,7 @@ resource "vault_kv_secret_v2" "certs" {
 
 
 locals {
-  ca_types = ["k8s", "mesh"]
+  ca_types = ["k8s", "mesh", "homelab"]
 }
 
 # Use sops to decrypt each certificate and key file
