@@ -8,10 +8,6 @@ locals {
       role_name      = "k0s_readonly_role"
       token_policies = [vault_policy.readonly["secrets"].name]
     }
-    rock_readonly = {
-      role_name      = "rock_readonly_role"
-      token_policies = [vault_policy.readonly["secrets"].name]
-    }
     konnect_readonly = {
       role_name      = "konnect_readonly_role"
       token_policies = [vault_policy.readonly["konnect"].name]
