@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   app = "minio";
   minioRootCredential = config.sops.secrets."minio-root-credential".path;
@@ -8,6 +8,7 @@ in
     enable = true;
     browser = true;
     region = "us-east-1";
+    package = (pkgs.callPackage ./minio.nix { });
     rootCredentialsFile = "${minioRootCredential}";
   };
 

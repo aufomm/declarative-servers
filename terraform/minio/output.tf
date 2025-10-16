@@ -1,21 +1,21 @@
 # 5. Output credentials
 output "admin_access_key" {
-  value = minio_iam_user.kong_admin_user.id
-  # sensitive = true
+  value = minio_iam_service_account.kong_backup_admin.access_key
+  sensitive = true
 }
 
 output "admin_secret_key" {
-  value     = minio_iam_user.kong_admin_user.secret
+  value = minio_iam_service_account.kong_backup_admin.secret_key
   sensitive = true
 }
 
 output "readonly_access_key" {
-  value = minio_iam_user.kong_readonly_user.id
-  # sensitive = true
+  value = minio_iam_service_account.kong_backup_readonly.access_key
+  sensitive = true
 }
 
 output "readonly_secret_key" {
-  value     = minio_iam_user.kong_readonly_user.secret
+  value = minio_iam_service_account.kong_backup_readonly.secret_key
   sensitive = true
 }
 
