@@ -43,24 +43,6 @@ resource "keycloak_openid_client" "vault" {
   client_authenticator_type = "client-secret"
 }
 
-resource "keycloak_openid_client" "sliver" {
-  realm_id    = keycloak_realm.terraform.id
-  client_id   = "sliver"
-  name        = "konnect-sliver-testing"
-  description = "Test Konnect sliver project"
-  enabled     = true
-  access_type = "CONFIDENTIAL"
-  valid_redirect_uris = [
-    "http://localhost/callback"
-  ]
-  service_accounts_enabled     = true
-  direct_access_grants_enabled = true
-  implicit_flow_enabled        = true
-  client_secret                = data.sops_file.secrets.data["sliver.client_secret"]
-  standard_flow_enabled        = true
-  client_authenticator_type    = "client-secret"
-}
-
 resource "keycloak_openid_client" "hcv-jwt" {
   realm_id    = keycloak_realm.terraform.id
   client_id   = "hcv-jwt"
@@ -161,13 +143,13 @@ resource "keycloak_openid_client" "orders-frontend" {
 }
 
 resource "keycloak_openid_client" "mtls" {
-  realm_id    = keycloak_realm.terraform.id
-  client_id   = "mtls"
-  name        = "lab-mtls-cbat"
-  description = "A client for testing client auth with keycloak"
-  enabled     = true
-  access_type = "CONFIDENTIAL"
-  service_accounts_enabled = true
+  realm_id                  = keycloak_realm.terraform.id
+  client_id                 = "mtls"
+  name                      = "lab-mtls-cbat"
+  description               = "A client for testing client auth with keycloak"
+  enabled                   = true
+  access_type               = "CONFIDENTIAL"
+  service_accounts_enabled  = true
   client_authenticator_type = "client-x509"
   extra_config = {
     # "x509.subjectdn" = ".*CN=fomm-kc-mtls.*"
