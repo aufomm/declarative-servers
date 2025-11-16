@@ -12,7 +12,6 @@
       warn-dirty = false;
       auto-optimise-store = true;
       download-buffer-size = 128 * 1024 * 1024; # 128 MiB
-      trusted-users = [ "fomm" ];
     };
     gc = {
       automatic = true;

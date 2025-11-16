@@ -28,6 +28,8 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHAKe2Dv58MInaZ9oy7R5m6OIgVDsYPIxWbTDtYPH0m3 pve"
     ];
   };
+  
+  nix.settings.trusted-users = [ "fomm" ];
 
   services.openssh.enable = true;
   services.qemuGuest.enable = true;

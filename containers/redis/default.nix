@@ -19,7 +19,7 @@ in
   };
 
   sops.secrets."redis-credential" = {
-    sopsFile = ../secrets/data-enc.yaml;
+    sopsFile = ../secrets/redis-enc.yaml;
     format = "yaml";
     mode = "0440";
     owner = config.users.users.redis.name;

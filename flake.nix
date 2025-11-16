@@ -112,7 +112,7 @@
           ];
         };
 
-        redis = mkColmenaConfig {
+        lxc-redis = mkColmenaConfig {
           host = "lxc-redis";
           hostModule = ./containers/redis;
           tags = [ "lxc" ];
@@ -120,6 +120,22 @@
             ./containers
           ];
         };
+        lxc-vault = mkColmenaConfig {
+          host = "lxc-vault";
+          hostModule = ./containers/vault;
+          tags = [ "lxc" ];
+          extraModules = [
+            ./containers
+          ];
+        };
+        lxc-keycloak = mkColmenaConfig {
+          host = "lxc-keycloak";
+          hostModule = ./containers/keycloak;
+          tags = [ "lxc" ];
+          extraModules = [
+            ./containers
+          ];
+        }; 
       };
 
       apps = forEachSystem (
@@ -139,6 +155,17 @@
                 serverName="$1"
                 echo "Applying to server: $serverName"
                 exec ${colmena.packages.${system}.colmena}/bin/colmena apply --on "$serverName"
+              ''
+            );
+          };
+          build-lxc = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "apply" ''
+                #!/usr/bin/env bash
+                set -euo pipefail
+                lxc_path="${self.packages.${system}.lxc}/tarball"
+                cp -f "$lxc_path"/nixos-*.tar.xz terraform/proxmox/nixos.tar.xz
               ''
             );
           };
