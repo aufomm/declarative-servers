@@ -15,7 +15,12 @@
       url = "home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     colmena.url = "github:zhaofengli/colmena";
+    nixpkgs-terraform.url = "github:stackbuilders/nixpkgs-terraform";
   };
 
   outputs =
@@ -27,6 +32,8 @@
       sops-nix,
       home-manager,
       colmena,
+      nixpkgs-terraform,
+      nixos-generators,
       ...
     }@inputs:
     let
@@ -39,6 +46,7 @@
           host,
           buildOnTarget ? false,
           system ? "x86_64-linux",
+          tags ? [ ],
           extraModules ? [ ],
           hostModule,
         }:
@@ -48,20 +56,38 @@
             targetPort = 22;
             targetUser = user;
             buildOnTarget = buildOnTarget;
-            tags = [ "homelab" ];
+            tags = [
+              "homelab"
+            ]
+            ++ tags;
           };
           nixpkgs.system = system;
           imports = [
-            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
-            ./servers/configuration.nix
+            sops-nix.nixosModules.sops
             hostModule
+            ./share
+            ./share/runtime-config.nix
           ]
           ++ extraModules;
           time.timeZone = "Australia/Melbourne";
         };
     in
     {
+      packages.x86_64-linux = {
+        lxc = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          modules = [
+            ./share
+            ./containers
+            home-manager.nixosModules.home-manager
+            { networking.hostName = "nixos"; }
+          ];
+          format = "proxmox-lxc";
+        };
+      };
+
       colmenaHive = colmena.lib.makeHive {
         meta = {
           nixpkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -78,8 +104,20 @@
           host = "tools";
           buildOnTarget = false;
           hostModule = ./servers/tools;
+          tags = [ "vm" ];
           extraModules = [
-            sops-nix.nixosModules.sops
+            ./servers
+            disko.nixosModules.disko
+            { _module.args.nixpkgs-terraform = nixpkgs-terraform; }
+          ];
+        };
+
+        redis = mkColmenaConfig {
+          host = "lxc-redis";
+          hostModule = ./containers/redis;
+          tags = [ "lxc" ];
+          extraModules = [
+            ./containers
           ];
         };
       };

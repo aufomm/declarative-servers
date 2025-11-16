@@ -1,0 +1,9 @@
+keys:
+  - &host age145uvzwjzua4kl0c89dmat00pgz3srfmf4wfzzalnszk5ae6t043ss8x4jj
+  - &redis age15mrqwh9r4q9y2acepfqsp2scuq6r7309np2e9ytjhplsvkpkspcq72sh0j
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|yml|pem)$
+    key_groups:
+      - age:
+          - *host
+          - *redis
