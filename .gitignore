@@ -2,7 +2,10 @@
 .terraform
 .terraform.lock.hcl
 .envrc
-.decrypted~secrets-enc.yaml
+.env
+.decrypted~*.yaml
 .secrets.yaml
+.tar.xz
 terraform/keycloak/cert.pem
 terraform/keycloak/key.pem
+terraform/proxmox

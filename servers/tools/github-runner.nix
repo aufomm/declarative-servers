@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  nixpkgs-terraform,
   ...
 }:
 let
@@ -12,7 +13,7 @@ in
     pkgs.nodejs_20
     pkgs.wget
     pkgs.unzip
-    pkgs.terraform
+    nixpkgs-terraform.packages.${pkgs.system}."1.13.4"
   ];
 
   services = {

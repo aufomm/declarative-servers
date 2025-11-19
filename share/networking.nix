@@ -4,6 +4,9 @@
       "192.168.3.172" = [
         "vault.li.lab"
       ];
+      "192.168.3.174" = [
+        "proxy.li.lab"
+      ];
       "192.168.3.100" = [
         "traefik.li.lab"
         "auth.li.lab"

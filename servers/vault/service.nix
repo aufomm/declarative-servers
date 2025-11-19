@@ -5,7 +5,6 @@ let
   sslCertKey = config.sops.secrets."vault/ssl_certificate_key".path;
 in
 {
-  # disable_mlock = true is required when running Vault inside a container
   services.vault = {
     enable = true;
     package = pkgs.vault-bin;
@@ -16,7 +15,6 @@ in
       api_addr     = "https://${hostname}:8200"
       disable_clustering = true
       ui           = true
-      disable_mlock = true
     '';
     tlsCertFile = "${sslCert}";
     tlsKeyFile = "${sslCertKey}";

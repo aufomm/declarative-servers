@@ -7,6 +7,7 @@
 {
   imports = [
     ./ca.nix
+    ./networking.nix
   ];
 
   home-manager = {

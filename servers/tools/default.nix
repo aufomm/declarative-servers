@@ -4,16 +4,20 @@
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ../disk-config.nix
-    ./networking.nix
     ./traefik.nix
     ./postgres.nix
     ./redis.nix
     ./keycloak
     ./minio
-    ./vault
+    # ./vault
     ./github-runner.nix
   ];
 
+  networking = {
+    hostName = "tools";
+    useNetworkd = true;
+  };
+  
   nix.settings = {
     substituters = [ "https://nixpkgs-terraform.cachix.org" ];
     trusted-public-keys = [ "nixpkgs-terraform.cachix.org-1:8Sit092rIdAVENA3ZVeH9hzSiqI/jng6JiCrQ1Dmusw=" ];

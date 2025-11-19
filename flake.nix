@@ -74,13 +74,23 @@
         };
     in
     {
+      nixosConfigurations.vault = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          disko.nixosModules.disko
+          home-manager.nixosModules.home-manager
+          ./share
+          ./share/runtime-config.nix
+          ./servers
+        ];
+      };
+
       packages.x86_64-linux = {
         lxc = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
             ./share
-            ./containers
             home-manager.nixosModules.home-manager
             { networking.hostName = "nixos"; }
           ];
@@ -111,7 +121,16 @@
             { _module.args.nixpkgs-terraform = nixpkgs-terraform; }
           ];
         };
-
+        vault = mkColmenaConfig {
+          host = "lxc-vault";
+          buildOnTarget = false;
+          hostModule = ./servers/vault;
+          tags = [ "vm" ];
+          extraModules = [
+            ./servers
+            disko.nixosModules.disko
+          ];
+        };
         lxc-redis = mkColmenaConfig {
           host = "lxc-redis";
           hostModule = ./containers/redis;
@@ -135,7 +154,15 @@
           extraModules = [
             ./containers
           ];
-        }; 
+        };
+        lxc-docker = mkColmenaConfig {
+          host = "lxc-docker";
+          hostModule = ./containers/docker;
+          tags = [ "lxc" ];
+          extraModules = [
+            ./containers
+          ];
+        };
       };
 
       apps = forEachSystem (
@@ -166,6 +193,24 @@
                 set -euo pipefail
                 lxc_path="${self.packages.${system}.lxc}/tarball"
                 cp -f "$lxc_path"/nixos-*.tar.xz terraform/proxmox/nixos.tar.xz
+              ''
+            );
+          };
+          bootstrap-nix = {
+            type = "app";
+            program = toString (
+              pkgs.writeShellScript "apply" ''
+                #!/usr/bin/env bash
+                set -euo pipefail
+
+                if [ $# -eq 0 ]; then
+                  echo "Usage: apply <host-ip-address>"
+                  exit 1
+                fi
+
+                host_ip="$1"
+                echo "Applying to server: $serverName"
+                nix run github:nix-community/nixos-anywhere -- --flake .#vault --target-host fomm@"$host_ip"
               ''
             );
           };
