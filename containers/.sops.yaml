@@ -1,8 +1,9 @@
 keys:
   - &host age145uvzwjzua4kl0c89dmat00pgz3srfmf4wfzzalnszk5ae6t043ss8x4jj
   - &redis age1mafl38hjx62tk6s7r4kqujras23rlnxzeqv53pcuaff7u03d4eus9n5nzu
-  - &vault age1y7s9fsmh52ckcgr9y2e3xlzgx0ns8w7ru359zh5rwgg2mjce6e6svn4vsr
+  - &vault age1n95yuqarzpvja5w28mqdj2vfg0629ytlp68zfdvhexn9n3xj6vmqvzn8hw
   - &keycloak age1m4yddkn9zwkrk2c457l9kgwxwy35l3256r2hcd6h29fljjxvgd3sher6wq
+  - &docker age1cnhzp45jmyqfwgxnuyj84lz2uf0jcf20xk4u5n47fs24fdvr6szshg9jzw
 creation_rules:
   - path_regex: secrets/redis.*\.ya?ml$
     key_groups:
@@ -19,3 +20,8 @@ creation_rules:
       - age:
           - *host
           - *keycloak
+  - path_regex: secrets/docker.*\.ya?ml$
+    key_groups:
+      - age:
+          - *host
+          - *docker
