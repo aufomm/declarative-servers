@@ -4,6 +4,12 @@ This repository contains all configurations for the **tools** server, managed de
 
 ![](assets/tools-server.png)
 
+# LXC containers on Proxmox
+
+Transitioning from one server running all tools to run one app per VM or LXC container for resources efficiency and also prevent one server down impacting all applications.
+
+![](assets/proxmox-lxc.png)
+
 ## Overview  
 
 This setup follows an **Infrastructure as Code (IaC)** approach, ensuring:  
