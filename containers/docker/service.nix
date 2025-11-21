@@ -27,6 +27,7 @@ in
     autoStart = true;
     image = "kong/kong-gateway:3.12.0.1";
     hostname = "homelab-lxc";
+    # KONG_VAULT_HCV_TOKEN is injected via env file from sops secrets
     environmentFiles = [
       config.sops.secrets."env".path
     ];
@@ -53,6 +54,15 @@ in
       KONG_LUA_SSL_TRUSTED_CERTIFICATE = "system,/cert/ca.pem";
       KONG_TRACING_INSTRUMENTATIONS = "all";
       KONG_TRACING_SAMPLING_RATE = "1.0";
+      KONG_TRUSTED_IPS="172.18.0.1";
+      KONG_REAL_IP_HEADER="X-Forwarded-For";
+      KONG_REAL_IP_RECURSIVE="on";
+      KONG_VAULT_HCV_PROTOCOL="https";
+      KONG_VAULT_HCV_HOST="vault.li.lab";
+      KONG_VAULT_HCV_PORT="8200";
+      KONG_VAULT_HCV_MOUNT="konnect";
+      KONG_VAULT_HCV_KV="v2";
+      KONG_VAULT_HCV_AUTH_METHOD="token";
     };
     extraOptions = [ 
       "--network=kong"
