@@ -23,7 +23,7 @@ terraform {
 }
 
 provider "keycloak" {
-  url = "https://auth.li.lab:9443"
+  url = "https://auth.li.lab"
 }
 
 data "sops_file" "secrets" {

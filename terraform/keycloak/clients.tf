@@ -158,3 +158,21 @@ resource "keycloak_openid_client" "mtls" {
     "tls.client.certificate.bound.access.tokens" = "true"
   }
 }
+
+resource "keycloak_openid_client" "authz" {
+  realm_id                 = keycloak_realm.terraform.id
+  client_id                = "authz"
+  name                     = "lab-authz"
+  description              = "A client dedicated for resource policy validations"
+  enabled                  = true
+  access_type              = "CONFIDENTIAL"
+  service_accounts_enabled = true
+  client_secret            = data.sops_file.secrets.data["authz.client_secret"]
+  standard_flow_enabled    = false
+  implicit_flow_enabled    = false
+  authorization {
+    policy_enforcement_mode          = "ENFORCING"
+    decision_strategy                = "UNANIMOUS"
+    allow_remote_resource_management = true
+  }
+}
