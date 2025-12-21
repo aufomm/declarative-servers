@@ -1,9 +1,11 @@
 keys:
   - &host age145uvzwjzua4kl0c89dmat00pgz3srfmf4wfzzalnszk5ae6t043ss8x4jj
   - &redis age1mafl38hjx62tk6s7r4kqujras23rlnxzeqv53pcuaff7u03d4eus9n5nzu
-  - &vault age1n95yuqarzpvja5w28mqdj2vfg0629ytlp68zfdvhexn9n3xj6vmqvzn8hw
-  - &keycloak age1m4yddkn9zwkrk2c457l9kgwxwy35l3256r2hcd6h29fljjxvgd3sher6wq
+  - &vault age1xjerq9x58dv5wnhjxukdfn6dl9yta9asjncpsh3a707nv2yju3dsqy55wh
+  - &keycloak age19autrwwlcnnvx9cqge4ej7w2ksx6l2t2zd6s4rnyjfa7qwht59fqd2rscw
   - &docker age1wqega53xr6k46ju6ungs9nrvttll3k0yu0d7z9ve33zd4f0rrs0qfn4uz2
+  - &test age1xjerq9x58dv5wnhjxukdfn6dl9yta9asjncpsh3a707nv2yju3dsqy55wh
+  - &garage age1g3zza50rz0ynl8hdgrkkc7kcmrw0x9rngv72av8eaj5m2cwx4dnq7xyng6
 creation_rules:
   - path_regex: secrets/redis.*\.ya?ml$
     key_groups:
@@ -25,3 +27,13 @@ creation_rules:
       - age:
           - *host
           - *docker
+  - path_regex: secrets/test.*\.ya?ml$
+    key_groups:
+      - age:
+          - *host
+          - *test
+  - path_regex: secrets/garage.*\.ya?ml$
+    key_groups:
+      - age:
+          - *host
+          - *garage
