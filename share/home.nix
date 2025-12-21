@@ -17,7 +17,7 @@
 
   home.username = "fomm";
   home.homeDirectory = "/home/fomm";
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.11";
   home.packages = with pkgs; [
     openssl
   ];
