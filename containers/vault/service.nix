@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  hostname = "vault.li.lab";
+  hostname = "vault.li.demo";
   sslCert = config.sops.secrets."vault/ssl_certificate".path;
   sslCertKey = config.sops.secrets."vault/ssl_certificate_key".path;
 in
@@ -17,6 +17,10 @@ in
       disable_clustering = true
       ui           = true
       disable_mlock = true
+    '';
+    listenerExtraConfig = ''
+      tls_min_version = "tls12"
+      tls_disable_client_certs = true
     '';
     tlsCertFile = "${sslCert}";
     tlsKeyFile = "${sslCertKey}";
