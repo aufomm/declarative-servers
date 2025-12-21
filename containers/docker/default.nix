@@ -4,6 +4,7 @@
     ./httpbin.nix
     ./sops.nix
     ./traefik.nix
+    ./vault-agent.nix
   ];
 
   networking.hostName = "docker";

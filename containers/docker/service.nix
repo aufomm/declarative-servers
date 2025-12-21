@@ -4,7 +4,7 @@ let
   cp_region = "au";
   redisIP = "192.168.3.100";
   vaultIP = "192.168.3.172";
-  authIP = "192.168.3.100";
+  authIP = "192.168.3.173";
   rockProxyIP = "192.168.3.162";
   homeCA = config.sops.secrets."fomm_ca".path;
 in
@@ -25,7 +25,7 @@ in
 
   virtualisation.oci-containers.containers.kong = {
     autoStart = true;
-    image = "kong/kong-gateway:3.12.0.1";
+    image = "kong/kong-gateway:3.13.0.0";
     hostname = "homelab-lxc";
     # KONG_VAULT_HCV_TOKEN is injected via env file from sops secrets
     environmentFiles = [
