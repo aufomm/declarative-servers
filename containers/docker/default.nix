@@ -5,6 +5,7 @@
     ./sops.nix
     ./traefik.nix
     ./vault-agent.nix
+    ./otel-collector.nix
   ];
 
   networking.hostName = "docker";

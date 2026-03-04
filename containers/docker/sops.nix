@@ -23,4 +23,15 @@
     format = "yaml";
     mode = "0440";
   };
+  sops.secrets."obs/client_id" = {
+    sopsFile = ../secrets/docker-enc.yaml;
+    format = "yaml";
+    mode = "0444";
+  };
+  
+  sops.secrets."obs/client_secret" = {
+    sopsFile = ../secrets/docker-enc.yaml;
+    format = "yaml";
+    mode = "0444";
+  };
 }

@@ -17,6 +17,10 @@
         "s3.li.lab"
         "admin.s3.li.lab"
       ];
+      "192.168.3.180" = [
+        "grafana.li.lab"
+        "obs.li.lab"
+      ];
       "192.168.3.100" = [
         "traefik.li.lab"
         # "auth.li.lab"

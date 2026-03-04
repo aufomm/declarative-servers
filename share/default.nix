@@ -8,6 +8,7 @@
   imports = [
     ./ca.nix
     ./networking.nix
+    ./runtime-config.nix
   ];
 
   home-manager = {

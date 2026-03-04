@@ -25,4 +25,9 @@
       MaxRetentionSec=1month
     '';
   };
+
+  services.prometheus.exporters.node.enable = true;
+  networking.firewall.allowedTCPPorts = [
+    9100
+  ];
 }

@@ -1,7 +1,7 @@
 locals {
   domains = {
     "vault"   = "vault.li.lab:8200"
-    "grafana" = "grafana.li.k0s"
+    "grafana" = "grafana.li.lab"
     "argocd"  = "argo.li.k0s"
     "mesh"    = "mesh.li.k0s"
     "orders"  = "orders.li.k0s"
