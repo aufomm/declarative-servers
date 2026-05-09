@@ -21,13 +21,12 @@ in
         else echo "Network kong already exists in docker"
       fi
     '';
-  };
-
+  };        
   virtualisation.oci-containers.containers.kong = {
     autoStart = true;
-    image = "kong/kong-gateway:3.13.0.0";
+    image = "kong/kong-gateway:3.14.0.2";
     hostname = "homelab-lxc";
-    # KONG_VAULT_HCV_TOKEN is injected via env file from sops secrets
+    # KONG_VAULT_* credentials are injected via env file from sops secrets
     environmentFiles = [
       config.sops.secrets."env".path
     ];
@@ -35,6 +34,7 @@ in
       "${homeCA}:/cert/ca.pem:ro"
     ];
     environment = {
+      KONG_TLS_CERTIFICATE_VERIFY = "off";
       KONG_LOG_LEVEL = "info";
       KONG_DATABASE = "off";
       KONG_ROLE = "data_plane";
@@ -62,7 +62,7 @@ in
       KONG_VAULT_HCV_PORT="8200";
       KONG_VAULT_HCV_MOUNT="konnect";
       KONG_VAULT_HCV_KV="v2";
-      KONG_VAULT_HCV_AUTH_METHOD="token";
+      KONG_VAULT_HCV_AUTH_METHOD="approle";
     };
     extraOptions = [ 
       "--network=kong"

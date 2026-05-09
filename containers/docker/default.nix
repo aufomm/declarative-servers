@@ -6,6 +6,9 @@
     ./traefik.nix
     ./vault-agent.nix
     ./otel-collector.nix
+    ./token-inspector.nix
+    ./cloudflared.nix
+    ./fluentbit.nix
   ];
 
   networking.hostName = "docker";

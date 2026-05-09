@@ -34,4 +34,16 @@
     format = "yaml";
     mode = "0444";
   };
+  
+  sops.secrets."cf/cert" = {
+    sopsFile = ../secrets/docker-enc.yaml;
+    format = "yaml";
+    mode = "0440";
+  };
+
+  sops.secrets."cf/tunnel_creds" = {
+    sopsFile = ../secrets/docker-enc.yaml;
+    format = "yaml";
+    mode = "0440";
+  };
 }
