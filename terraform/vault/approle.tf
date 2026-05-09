@@ -6,17 +6,36 @@ locals {
     }
     k0s_readonly = {
       role_name      = "k0s_readonly_role"
-      token_policies = [vault_policy.readonly["secrets"].name]
+      token_policies = [vault_policy.readonly["secrets"].name, vault_policy.readonly["konnect"].name]
     }
     konnect_readonly = {
       role_name      = "konnect_readonly_role"
       token_policies = [vault_policy.readonly["konnect"].name]
+    }
+    secrets_admin = {
+      role_name = "secrets_admin_role"
+      token_policies = [
+        vault_policy.secrets_admin.name
+      ]
     }
     konnect_admin = {
       role_name = "konnect_admin_role"
       token_policies = [
         vault_policy.konnect_admin.name,
         vault_policy.konnect_policy_admin.name
+      ]
+    }
+    # These roles and policies are managed externally in a separate pipeline
+    rock_readonly = { # New AppRole
+      role_name = "konnect_au_rock_readonly_role"
+      token_policies = [
+        "konnect_au-rock_readonly"
+      ]
+    }
+    lxc_readonly = { # New AppRole
+      role_name = "konnect_au_lxc_readonly_role"
+      token_policies = [
+        "konnect_au-lxc_readonly"
       ]
     }
   }

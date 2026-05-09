@@ -64,6 +64,41 @@ data "vault_policy_document" "readonly" {
   }
 }
 
+resource "vault_policy" "secrets_admin" {
+  name   = "secrets_admin"
+  policy = data.vault_policy_document.secrets_admin.hcl
+}
+
+data "vault_policy_document" "secrets_admin" {
+  rule {
+    path         = "${vault_mount.secrets.path}/data/*"
+    capabilities = ["create", "update", "read", "delete"]
+    description  = "Allow admin secret contents at all paths under the mount secrets"
+  }
+  rule {
+    path         = "${vault_mount.secrets.path}/metadata/*"
+    capabilities = ["create", "update", "read", "delete", "list"]
+    description  = "Allow listing available secrets and viewing their metadata under the mount secrets"
+  }
+  rule {
+    path         = "auth/token/create"
+    capabilities = ["update"]
+    description  = "Allow creation of child tokens (required by Terraform Vault provider)"
+  }
+
+  rule {
+    path         = "${vault_mount.rsa.path}/issue/${vault_pki_secret_backend_role.rsa_client_cert.name}"
+    capabilities = ["create", "update"]
+    description  = "Allow issuing certificates using the client-cert role"
+  }
+  rule {
+    path         = "sys/mounts/${vault_mount.rsa.path}"
+    capabilities = ["read"]
+    description  = "Allow reading mount metadata for rsa"
+  }
+}
+
+
 resource "vault_policy" "konnect_admin" {
   name   = "konnect_admin"
   policy = data.vault_policy_document.konnect_admin.hcl
