@@ -33,8 +33,4 @@
     hostName = "obs";
     useNetworkd = true;
   };
-  
-  environment.systemPackages = [
-    pkgs.openssl
-  ];
 }

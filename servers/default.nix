@@ -11,11 +11,6 @@
     ./disk-config.nix
   ];
 
-  environment.systemPackages = map lib.lowPrio [
-    pkgs.curl
-    pkgs.gitMinimal
-  ];
-
   boot.loader.grub = {
     efiSupport = true;
     efiInstallAsRemovable = true;
