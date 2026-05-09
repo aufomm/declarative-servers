@@ -25,11 +25,9 @@
 
   nixConfig = {
     extra-substituters = [
-      "https://colmena.cachix.org"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "colmena.cachix.org-1:7BzpDnjjH8ki2CT3f6GdOk7QAzPOl+1t3LvTLXqYcSg="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
@@ -130,7 +128,6 @@
             { _module.args.nixpkgs-terraform = nixpkgs-terraform; }
           ];
         };
-
         obs = mkColmenaConfig {
           host = "obs";
           buildOnTarget = false;
@@ -141,7 +138,6 @@
             disko.nixosModules.disko
           ];
         };
-
         vault = mkColmenaConfig {
           host = "vault";
           buildOnTarget = false;
@@ -152,23 +148,6 @@
             disko.nixosModules.disko
           ];
         };
-
-        lxc-test = mkColmenaConfig {
-          host = "lxc-test";
-          hostModule = ./containers/vault;
-          tags = [ "lxc" ];
-          extraModules = [
-            ./containers
-          ];
-        };
-        # lxc-vault = mkColmenaConfig {
-        #   host = "lxc-vault";
-        #   hostModule = ./containers/vault;
-        #   tags = [ "lxc" ];
-        #   extraModules = [
-        #     ./containers
-        #   ];
-        # };
         lxc-keycloak = mkColmenaConfig {
           host = "lxc-keycloak";
           hostModule = ./containers/keycloak;
@@ -177,10 +156,19 @@
             ./containers
           ];
         };
+        lxc-pskc = mkColmenaConfig {
+          host = "lxc-pskc";
+          hostModule = ./containers/pskc;
+          tags = [ "lxc" "ps" ];
+          extraModules = [    
+            ./containers
+          ];
+        };
         lxc-docker = mkColmenaConfig {
           host = "lxc-docker";
           hostModule = ./containers/docker;
           tags = [ "lxc" ];
+          buildOnTarget = true;
           extraModules = [
             ./containers
           ];
