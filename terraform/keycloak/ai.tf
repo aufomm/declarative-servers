@@ -1,3 +1,11 @@
+locals {
+  mcp_public_clients = {
+    weather  = "https://proxy.li.lab/weather/mcp"
+    fomm     = "https://proxy.li.lab/fomm/mcp"
+    context7 = "https://proxy.li.lab/context7/mcp"
+  }
+}
+
 resource "keycloak_realm" "ai" {
   realm                 = "ai"
   enabled               = true
@@ -41,22 +49,27 @@ resource "keycloak_openid_client" "mcp-private" {
   enabled                      = true
   access_type                  = "CONFIDENTIAL"
   service_accounts_enabled     = true
-  client_secret                = data.sops_file.secrets.data["mcp.client_secret"]
+  client_secret                = data.sops_file.secrets.data["client_secret.mcp"]
   standard_flow_enabled        = false
   implicit_flow_enabled        = false
-  direct_access_grants_enabled = true
+  direct_access_grants_enabled = false
 }
 
-resource "keycloak_openid_client" "mcp-weather" {
+resource "keycloak_openid_client" "mcp_public" {
+  for_each = local.mcp_public_clients
+
   realm_id    = keycloak_realm.ai.id
-  client_id   = "mcp-weather"
-  name        = "lab-mcp-weather"
-  description = "A client for testing weather mcp oauth via kong"
+  client_id   = "mcp-${each.key}"
+  name        = "lab-mcp-${each.key}"
+  description = "A client for testing ${each.key} mcp oauth via kong"
   enabled     = true
   access_type = "PUBLIC"
   valid_redirect_uris = [
     "http://localhost:6274/oauth/callback/*",
-    "https://app.insomnia.rest/oauth/redirect"
+    "https://app.insomnia.rest/oauth/redirect",
+    "http://localhost:3000/callback",
+    "https://jwt.fomm.dev/callback",
+    "https://jwt.li.lab/callback"
   ]
   web_origins = [
     "http://localhost:6274",
@@ -69,27 +82,28 @@ resource "keycloak_openid_client" "mcp-weather" {
   direct_access_grants_enabled = false
 }
 
-resource "keycloak_openid_audience_protocol_mapper" "weather_audience_mapper" {
-  realm_id    = keycloak_realm.ai.id
-  client_id                = keycloak_openid_client.mcp-weather.id
-  name                     = "weather-audience-mapper"
-  included_custom_audience = "http://localhost:8000/weather/mcp"
+resource "keycloak_openid_audience_protocol_mapper" "mcp_public_audience_mapper" {
+  for_each = local.mcp_public_clients
+
+  realm_id                 = keycloak_realm.ai.id
+  client_id                = keycloak_openid_client.mcp_public[each.key].id
+  name                     = "${each.key}-audience-mapper"
+  included_custom_audience = each.value
   add_to_access_token      = true
   add_to_id_token          = true
-  depends_on               = [keycloak_openid_client.mcp-weather]
+  depends_on               = [keycloak_openid_client.mcp_public]
 }
 
-
-resource "keycloak_user" "mcp-client" {
+resource "keycloak_user" "mcp-user" {
   realm_id       = keycloak_realm.ai.id
-  username       = "mcp-client"
+  username       = "mcp-user"
   enabled        = true
   email_verified = true
-  email          = "mcp-client@li.local"
+  email          = "mcp-user@li.local"
   first_name     = "mcp"
-  last_name      = "client"
+  last_name      = "user"
   initial_password {
-    value     = data.sops_file.secrets.data["users.mcp-client.password"]
+    value     = data.sops_file.secrets.data["users.password.mcp-user"]
     temporary = false
   }
 }

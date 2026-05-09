@@ -1,10 +1,10 @@
 resource "keycloak_openid_client" "k0s" {
-  realm_id                     = keycloak_realm.terraform.id
-  client_id                    = "k0s"
-  name                         = "k0s"
-  description                  = "Use this client for k0s cluster authn and authz"
-  enabled                      = true
-  access_type                  = "PUBLIC"
+  realm_id    = keycloak_realm.terraform.id
+  client_id   = "k0s"
+  name        = "k0s"
+  description = "Use this client for k0s cluster authn and authz"
+  enabled     = true
+  access_type = "PUBLIC"
   # client_secret                = data.sops_file.secrets.data["k0s.client_secret"]
   service_accounts_enabled     = false
   standard_flow_enabled        = true
@@ -26,7 +26,7 @@ resource "keycloak_user" "k0s_admin" {
   first_name     = "K0s"
   last_name      = "Admin"
   initial_password {
-    value     = data.sops_file.secrets.data["users.k0s-admin.password"]
+    value     = data.sops_file.secrets.data["users.password.k0s-admin"]
     temporary = false
   }
 }

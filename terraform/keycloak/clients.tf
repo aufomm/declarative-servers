@@ -38,7 +38,7 @@ resource "keycloak_openid_client" "vault" {
     "https://${local.domains.vault}"
   ]
   service_accounts_enabled  = false
-  client_secret             = data.sops_file.secrets.data["vault.client_secret"]
+  client_secret             = data.sops_file.secrets.data["client_secret.vault"]
   standard_flow_enabled     = true
   client_authenticator_type = "client-secret"
 }
@@ -54,7 +54,7 @@ resource "keycloak_openid_client" "hcv-jwt" {
   service_accounts_enabled     = true
   direct_access_grants_enabled = false
   implicit_flow_enabled        = false
-  client_secret                = data.sops_file.secrets.data["hcv_jwt.client_secret"]
+  client_secret                = data.sops_file.secrets.data["client_secret.hcv_jwt"]
   standard_flow_enabled        = false
   client_authenticator_type    = "client-secret"
 }
@@ -73,7 +73,7 @@ resource "keycloak_openid_client" "grafana" {
     "https://${local.domains.grafana}"
   ]
   service_accounts_enabled     = false
-  client_secret                = data.sops_file.secrets.data["grafana.client_secret"]
+  client_secret                = data.sops_file.secrets.data["client_secret.grafana"]
   standard_flow_enabled        = true
   implicit_flow_enabled        = false
   direct_access_grants_enabled = true
@@ -96,7 +96,7 @@ resource "keycloak_openid_client" "argocd" {
     "https://${local.domains.argocd}/applications"
   ]
   service_accounts_enabled     = false
-  client_secret                = data.sops_file.secrets.data["argocd.client_secret"]
+  client_secret                = data.sops_file.secrets.data["client_secret.argocd"]
   standard_flow_enabled        = true
   implicit_flow_enabled        = false
   direct_access_grants_enabled = true
@@ -118,7 +118,7 @@ resource "keycloak_openid_client" "mesh-cp" {
     "https://${local.domains.mesh}"
   ]
   service_accounts_enabled = false
-  client_secret            = data.sops_file.secrets.data["mesh.client_secret"]
+  client_secret            = data.sops_file.secrets.data["client_secret.mesh"]
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
 }
@@ -137,7 +137,7 @@ resource "keycloak_openid_client" "orders-frontend" {
     "https://${local.domains.orders}"
   ]
   service_accounts_enabled = false
-  client_secret            = data.sops_file.secrets.data["orders.client_secret"]
+  client_secret            = data.sops_file.secrets.data["client_secret.orders"]
   standard_flow_enabled    = true
   implicit_flow_enabled    = false
 }
@@ -167,7 +167,7 @@ resource "keycloak_openid_client" "authz" {
   enabled                  = true
   access_type              = "CONFIDENTIAL"
   service_accounts_enabled = true
-  client_secret            = data.sops_file.secrets.data["authz.client_secret"]
+  client_secret            = data.sops_file.secrets.data["client_secret.authz"]
   standard_flow_enabled    = false
   implicit_flow_enabled    = false
   authorization {

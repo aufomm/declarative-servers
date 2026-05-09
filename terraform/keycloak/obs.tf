@@ -9,7 +9,7 @@ resource "keycloak_realm" "obs" {
   verify_email             = false
   login_with_email_allowed = true
   duplicate_emails_allowed = false
-  
+
   revoke_refresh_token        = true
   default_signature_algorithm = "RS256"
 }
@@ -41,7 +41,7 @@ resource "keycloak_openid_client" "obs_k0s" {
   enabled                      = true
   access_type                  = "CONFIDENTIAL"
   service_accounts_enabled     = true
-  client_secret                = data.sops_file.secrets.data["obs.k0s.client_secret"]
+  client_secret                = data.sops_file.secrets.data["obs.client_secret.k0s"]
   standard_flow_enabled        = false
   implicit_flow_enabled        = false
   direct_access_grants_enabled = false
@@ -65,7 +65,7 @@ resource "keycloak_openid_client" "obs_lxc_docker" {
   enabled                      = true
   access_type                  = "CONFIDENTIAL"
   service_accounts_enabled     = true
-  client_secret                = data.sops_file.secrets.data["obs.lxc-docker.client_secret"]
+  client_secret                = data.sops_file.secrets.data["obs.client_secret.lxc-docker"]
   standard_flow_enabled        = false
   implicit_flow_enabled        = false
   direct_access_grants_enabled = false
@@ -89,7 +89,7 @@ resource "keycloak_openid_client" "obs_rock" {
   enabled                      = true
   access_type                  = "CONFIDENTIAL"
   service_accounts_enabled     = true
-  client_secret                = data.sops_file.secrets.data["obs.rock.client_secret"]
+  client_secret                = data.sops_file.secrets.data["obs.client_secret.rock"]
   standard_flow_enabled        = false
   implicit_flow_enabled        = false
   direct_access_grants_enabled = false

@@ -1,8 +1,12 @@
+/*
+For initial client set up
+https://registry.terraform.io/providers/keycloak/keycloak/latest/docs#client-credentials-grant-setup-recommended
+*/
 terraform {
   required_providers {
     keycloak = {
       source  = "keycloak/keycloak"
-      version = "5.1.1"
+      version = "5.7.0"
     }
     sops = {
       source  = "carlpett/sops"

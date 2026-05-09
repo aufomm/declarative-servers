@@ -7,7 +7,7 @@ resource "keycloak_user" "vault-admin" {
   first_name     = "Vault"
   last_name      = "Admin"
   initial_password {
-    value     = data.sops_file.secrets.data["users.vault-admin.password"]
+    value     = data.sops_file.secrets.data["users.password.vault-admin"]
     temporary = false
   }
 }
@@ -21,7 +21,7 @@ resource "keycloak_user" "fomm" {
   first_name     = "All"
   last_name      = "Admin"
   initial_password {
-    value     = data.sops_file.secrets.data["users.fomm.password"]
+    value     = data.sops_file.secrets.data["users.password.fomm"]
     temporary = false
   }
 }
@@ -35,7 +35,7 @@ resource "keycloak_user" "test-user" {
   first_name     = "Test"
   last_name      = "User"
   initial_password {
-    value     = data.sops_file.secrets.data["users.test-user.password"]
+    value     = data.sops_file.secrets.data["users.password.test-user"]
     temporary = false
   }
 }
@@ -49,7 +49,7 @@ resource "keycloak_user" "grafana-admin" {
   first_name     = "grafana"
   last_name      = "Admin"
   initial_password {
-    value     = data.sops_file.secrets.data["users.grafana-admin.password"]
+    value     = data.sops_file.secrets.data["users.password.grafana-admin"]
     temporary = false
   }
 }
@@ -63,7 +63,7 @@ resource "keycloak_user" "argocd-admin" {
   first_name     = "argocd"
   last_name      = "Admin"
   initial_password {
-    value     = data.sops_file.secrets.data["users.argocd-admin.password"]
+    value     = data.sops_file.secrets.data["users.password.argocd-admin"]
     temporary = false
   }
 }
