@@ -6,6 +6,7 @@
     mode = "0440";
     owner = config.users.users.vault.name;
     group = config.users.users.vault.group;
+    restartUnits = [ "vault.service" ];
   };
 
   sops.secrets."vault/ssl_certificate_key" = {

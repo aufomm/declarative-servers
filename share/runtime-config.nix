@@ -5,6 +5,8 @@
       allowUnfreePredicate = _: true;
     };
   };
+  
+  services.dbus.implementation = "broker";
 
   nix = {
     settings = {
