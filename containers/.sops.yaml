@@ -1,11 +1,12 @@
 keys:
   - &host age145uvzwjzua4kl0c89dmat00pgz3srfmf4wfzzalnszk5ae6t043ss8x4jj
   - &redis age1mafl38hjx62tk6s7r4kqujras23rlnxzeqv53pcuaff7u03d4eus9n5nzu
-  - &vault age1xjerq9x58dv5wnhjxukdfn6dl9yta9asjncpsh3a707nv2yju3dsqy55wh
-  - &keycloak age19autrwwlcnnvx9cqge4ej7w2ksx6l2t2zd6s4rnyjfa7qwht59fqd2rscw
-  - &docker age1wqega53xr6k46ju6ungs9nrvttll3k0yu0d7z9ve33zd4f0rrs0qfn4uz2
-  - &test age1xjerq9x58dv5wnhjxukdfn6dl9yta9asjncpsh3a707nv2yju3dsqy55wh
-  - &garage age1g3zza50rz0ynl8hdgrkkc7kcmrw0x9rngv72av8eaj5m2cwx4dnq7xyng6
+  - &vault age1n95yuqarzpvja5w28mqdj2vfg0629ytlp68zfdvhexn9n3xj6vmqvzn8hw #192.168.3.172
+  - &keycloak age1pvq23lv0x05z2myutlz74w7c5xg6mcc8jurdldpg2sngqhe0d97swghp8r #192.168.3.173
+  - &docker age1csuuhp28a70dve8jdhunr6qlqez7rjgwn2rgq6h28uz6kreey9hq8gkd58 #192.168.3.174
+  - &test age13zhk5re38vwh05f99m2s76mdl8kd3p8crkjxmp9j3xv964elmgqqqaq5zg #192.168.3.171
+  - &garage age15mew429mk0frqlm5ptme83xqxtklpp6rxdf8gh7yr4lye4c493xsfw08vw #192.168.3.175
+  - &pskc age1scchmephkegwmzfpyhxgwwtlqh9xxdtxzld6e7exyn2tc77h6d0sf6240r #192.168.3.10
 creation_rules:
   - path_regex: secrets/redis.*\.ya?ml$
     key_groups:
@@ -37,3 +38,8 @@ creation_rules:
       - age:
           - *host
           - *garage
+  - path_regex: secrets/pskc.*\.ya?ml$
+    key_groups:
+      - age:
+          - *host
+          - *pskc
