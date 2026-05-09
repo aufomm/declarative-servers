@@ -1,7 +1,7 @@
 /*
-  This setup creates a adminless Keycloak. 
-  
-  To create an admin user,we can use local port forwarding.
+  This setup creates a adminless Keycloak.
+
+  To create an admin user,we can use local port forwarding. (Make sure we set `https-port` to 9443 for the initial set up)
 
   For the initial setup, we can bind the https port to a local port (9443) using ssh port forwarding:
   ```bash
@@ -34,6 +34,7 @@ in
       https-trust-store-file = "${homeCA}";
       https-trust-store-type = "PEM";
       https-client-auth = "request";
+      truststore-paths = "${homeCA}";
     };
   };
 
