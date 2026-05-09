@@ -14,6 +14,7 @@
     ./redis.nix
     ./minio
     ./github-runner.nix
+    ./buildkite.nix
   ];
 
   networking = {
