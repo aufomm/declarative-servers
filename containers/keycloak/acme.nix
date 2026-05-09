@@ -3,10 +3,6 @@ let
   hostname = "auth.li.lab";
 in
 {
-  environment.systemPackages = [
-    pkgs.openssl
-  ];
-
   security.acme = {
     acceptTerms = true;
     server = "https://vault.li.lab:8200/v1/ecc/acme/directory";

@@ -18,6 +18,12 @@
     backupFileExtension = "backup";
   };
 
+  environment.systemPackages = map lib.lowPrio [
+    pkgs.curl
+    pkgs.gitMinimal
+    pkgs.openssl
+  ];
+  
   users.users.fomm = {
     isNormalUser = true;
     shell = pkgs.zsh;
